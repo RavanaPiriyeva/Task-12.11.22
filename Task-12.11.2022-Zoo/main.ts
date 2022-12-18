@@ -7,16 +7,15 @@ interface IAnimalTypes {
     reservoir: boolean;
     requiredSpace: number;
     eat: string;
-    typeofAnimal:Type;
+    typeofAnimal: Type;
 }
 
-
-
-interface IAnimal extends IAnimalTypes {
+interface IAnimal {
     id: number;
     name: string;
     age: number;
     foodAmount: number;
+    type: IAnimalTypes;
 }
 
 interface ICages {
@@ -25,23 +24,48 @@ interface ICages {
     biome: string;
     reservoir: boolean;
     area: number;
-    animals:IAnimal[]
+    animals: IAnimal[]
 }
 
-type Type= 'predator' | 'herbivore';
+type Type = 'predator' | 'herbivore';
 //Animals
 
-let wolf1:IAnimal = {
+
+let wolf: IAnimalTypes = {
     id: 1,
-    name: 'wolf1',
-    age: 2,
-    foodAmount: 300,
     animal: "wolf",
     biome: "Taiga",
     reservoir: true,
     requiredSpace: 50,
     eat: "mammals",
-    typeofAnimal:"predator",
+    typeofAnimal: "predator",
+}
+let goldfish: IAnimalTypes = {
+    id: 2,
+    animal: "goldfish",
+    biome: "ocean",
+    reservoir: true,
+    requiredSpace: 10,
+    eat: "fishFood",
+    typeofAnimal: "herbivore",
+}
+let tiger: IAnimalTypes = {
+    id: 3,
+    animal: "tiger",
+    biome: "tropical",
+    reservoir: false,
+    requiredSpace: 1000,
+    eat: "carnivore",
+    typeofAnimal: "predator",
+}
+
+
+let wolf1: IAnimal = {
+    id: 1,
+    name: 'wolf1',
+    age: 2,
+    foodAmount: 300,
+    type: wolf,
 }
 
 let wolf2: IAnimal = {
@@ -49,12 +73,7 @@ let wolf2: IAnimal = {
     name: 'wolf2',
     age: 4,
     foodAmount: 500,
-    animal: "wolf",
-    biome: "Taiga",
-    reservoir: true,
-    requiredSpace: 50,
-    eat: "mammals",
-    typeofAnimal:"predator",
+    type: wolf,
 }
 
 let wolf3: IAnimal = {
@@ -62,12 +81,7 @@ let wolf3: IAnimal = {
     name: 'wolf3',
     age: 3,
     foodAmount: 400,
-    animal: "wolf",
-    biome: "Taiga",
-    reservoir: true,
-    requiredSpace: 50,
-    eat: "mammals",
-    typeofAnimal:"predator",
+    type: wolf,
 }
 
 let goldfish1: IAnimal = {
@@ -75,12 +89,8 @@ let goldfish1: IAnimal = {
     name: 'goldfish1',
     age: 0,
     foodAmount: 20,
-    animal: "goldfish",
-    biome: "ocean",
-    reservoir: true,
-    requiredSpace: 10,
-    eat: "fishFood",
-    typeofAnimal:"herbivore",
+    type: goldfish,
+
 }
 
 let goldfish2: IAnimal = {
@@ -88,12 +98,7 @@ let goldfish2: IAnimal = {
     name: 'goldfish2',
     age: 0,
     foodAmount: 20,
-    animal: "goldfish",
-    biome: "ocean",
-    reservoir: true,
-    requiredSpace: 10,
-    eat: "fishFood",
-    typeofAnimal:"herbivore",
+    type: goldfish,
 }
 
 let tiger1: IAnimal = {
@@ -101,12 +106,7 @@ let tiger1: IAnimal = {
     name: 'tiger1',
     age: 2,
     foodAmount: 200,
-    animal: "tiger",
-    biome: "tropical",
-    reservoir: false,
-    requiredSpace: 1000,
-    eat: "carnivore",
-    typeofAnimal:"predator",
+    type: tiger,
 }
 
 let cage1: ICages = {
@@ -135,55 +135,68 @@ let cage3: ICages = {
     area: 200,
     animals: [],
 }
-function placeAnimals(animal:IAnimal,enclosure:ICages) {
-    if (animal.reservoir===enclosure.reservoir && animal.biome===enclosure.biome && animal.requiredSpace<=enclosure.area) {
-                 
-    console.log(`This enclosure is suitable for ${animal.name}.`); 
-    checkType(animal,enclosure.animals);
-   
-    return  `${animal.name} added to ${enclosure.name}`;
-        
+
+
+function placeAnimals(animal: IAnimal, enclosure: ICages) {
+    if (animal.type.reservoir === enclosure.reservoir && animal.type.biome === enclosure.biome && animal.type.requiredSpace <= enclosure.area) {
+
+        console.log(`This enclosure is suitable for ${animal.name}.`);
+        checkType(animal, enclosure.animals);
+
+         return `${animal.name} added to ${enclosure.name}`;
+
     }
-    else{
+    else {
         console.log(`It is impossible to add "${animal.name}" to enclosure with ${enclosure.area}m area,${enclosure.biome} biome. `);
         return 'That is why adding failed.'
     }
 
 }
-function checkType(animal:IAnimal,animals:IAnimal[]) {
-for (let i = 0; i < animals.length; i++) {
-if ((animals[i].typeofAnimal=='predator' && animal.typeofAnimal=='herbivore') || (animals[i].typeofAnimal=='herbivore' && animal.typeofAnimal=='predator')) {
-    console.log(`This enclosure is not suitable for ${animal.name},because types of animals are opposite. `);
-    console.log('====================================');
-}
-else{
-    animals.push(animal);
-    
+function checkType(animal: IAnimal, animals: IAnimal[]) {
+
+    if (animals.length == 0) {
+        animals.push(animal);
+    }
+    else {
+
+        for (let i = 0; i < animals.length; i++) {
+            console.log("sdhsufdfgdhdjghdgam")
+            if ((animals[i].type.typeofAnimal == 'predator' && animal.type.typeofAnimal == 'herbivore') || (animals[i].type.typeofAnimal == 'herbivore' && animal.type.typeofAnimal == 'predator')) {
+                console.log(`This enclosure is not suitable for ${animal.name},because types of animals are opposite. `);
+                console.log('====================================');
+            }
+            else {
+                animals.push(animal);
+                break;
+            }
+
+        }
+    }
+
+    //    return animal && animals
 }
 
-}
-//    return animal && animals
-}
-
-console.log(placeAnimals(wolf1,cage3));
-console.log(placeAnimals(wolf2,cage3));
-console.log(placeAnimals(wolf3,cage3));
-console.log(placeAnimals(goldfish1,cage1));
-console.log(placeAnimals(goldfish2,cage2));
-console.log(placeAnimals(tiger1,cage2));
+console.log(placeAnimals(wolf1, cage3));
+console.log(placeAnimals(wolf2, cage3));
+console.log(placeAnimals(wolf3, cage3));
+console.log(placeAnimals(goldfish1, cage1));
+console.log(placeAnimals(goldfish2, cage2));
+console.log(placeAnimals(tiger1, cage2));
 
 console.log('====================================');
 
-function showAnimals(enclosure:ICages) {
-console.log(`Animals in ${enclosure.name}:`);
-enclosure.animals.forEach(anm => {
-console.log(anm.name)
-if (enclosure.animals.length===0) {
-    console.log("This enclosure is empty..");
-    
-}
-return anm.name
-})
+function showAnimals(enclosure: ICages) {
+    console.log(`Animals in ${enclosure.name}:`);
+    console.log("slaam")
+    console.log(enclosure.animals)
+    enclosure.animals.forEach(anm => {
+        console.log(anm.name)
+        if (enclosure.animals.length === 0) {
+            console.log("This enclosure is empty..");
+
+        }
+        return anm.name
+    })
 }
 showAnimals(cage1);
 showAnimals(cage2);
